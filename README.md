@@ -1,2 +1,2 @@
-# python_thing
-Python script for organizing data
+# Python Thing
+A quick script for me to organize port information data.
