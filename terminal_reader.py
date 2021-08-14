@@ -5,10 +5,42 @@ from typing import Union
 parser = argparse.ArgumentParser(description="A data processor for a Terminal list")
 
 
+# Supposed to store the parentroom number
+# And an actual reference to the Terminal object
+# TODO: Make a function for adding new terminal
+# I don;t think I need to add a compare for terminals, because
+# The CSV files should not have any more information
+class ParentRoom:
+	def __init__(self, number:str)->None:
+		self.terminals: list = []
+		self.number:str = number
+	def __eq__(self, oparent_room:object) -> bool:
+		return self.number == oparent_room.number
+		
 def is_header(csv_line: list) -> bool:
 	for index in csv_line:
 		if index == "Room Number": return True
 		else: return False
+
+# ParentRooms data information:
+# supposed to store a list of all the parent rooms.
+# I think I can refactor this into a couple of functions instead of a whole class.
+class ParentRooms:
+	def __init__(self)->None:
+		self.parent_rooms:list=[]
+	# This function should if not present make a new parent room if one does not exist
+	# Add a terminal to a parent room 
+	# If the room exists, add the terminal to the room.
+	def add_parent_room(self, parent_room:ParentRoom)->bool:
+		if self.contains(parent_room): return False
+		self.parent_rooms.append(parent_room)
+		return True
+	def contains(self, parent_room:ParentRoom)-> bool:
+		for room in self.parent_rooms:
+			if parent_room.__eq__(room): return True
+		return False
+
+
 
 def translate_used_symbols(symbol: str) -> int:
 	return 1 if symbol == 'X' else 0
@@ -26,10 +58,10 @@ def translate_symbols_to_bin(port_usage: str) -> Union[int, bool]:
 	##This should return the sequence
 
 
-
 class Terminal:
 	def __init__(self, info) -> None:
 		self.room, self.box_label, self.port_count, self.port_count, self.used, self.patch_port, self.parent_room, self.comment = info
+
 		self.used = translate_symbols_to_bin(self.used)
 
 	def __str__(self) -> str:
@@ -46,12 +78,22 @@ def create_list(filename:str) -> list:
 			terminal_list.append(Terminal(row))
 		return terminal_list
 
+		
+
 
 def string_terminal_list(terminal_list: list) -> str:
-	builder: str = ""
-	for terminal in terminal_list:
-		parent_room: str = terminal.parent_room 
-		print(f"{parent_room},{terminal.comment}")
+	def myFunc(term: Terminal) -> int:
+		return term.parent_room
+	terminal_list.sort(key=myFunc)
+	# List should be sorted at this point.
+	# Collect until room changes.
+
+	builder:str = "";
+	for terminals in terminal_list:
+		builder
+
+
+
 
 
 
