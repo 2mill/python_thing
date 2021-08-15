@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser(description="A data processor for a Terminal li
 
 # Supposed to store the parentroom number
 # And an actual reference to the Terminal object
-# TODO: Make a function for adding new terminal
+# TODO: ~~Make a function for adding new terminal~~: Complete
 # I don;t think I need to add a compare for terminals, because
 # The CSV files should not have any more information
 class ParentRoom:
@@ -16,7 +16,14 @@ class ParentRoom:
 		self.number:str = number
 	def __eq__(self, oparent_room:object) -> bool:
 		return self.number == oparent_room.number
-		
+	def add_terminal(self, terminal: object) -> bool:
+		if self.terminals.__contains__(terminal):
+			return False
+		self.terminals.append(terminal)
+	def contains(self, oterminal: object) -> bool:
+		for terminal in self.terminals:
+			if oterminal == terminal: return True
+		return False
 def is_header(csv_line: list) -> bool:
 	for index in csv_line:
 		if index == "Room Number": return True
@@ -35,6 +42,10 @@ class ParentRooms:
 		if self.contains(parent_room): return False
 		self.parent_rooms.append(parent_room)
 		return True
+	def contains_terminal(self, terminal: object) -> bool:
+		for parent_room in self.parent_rooms:
+			if parent_room.contains(terminal): return True
+		return False
 	def contains(self, parent_room:ParentRoom)-> bool:
 		for room in self.parent_rooms:
 			if parent_room.__eq__(room): return True
@@ -66,8 +77,13 @@ class Terminal:
 
 	def __str__(self) -> str:
 		return f"\t\n{self.room}\t\n{self.box_label}\t\n{self.port_count}\t\n{self.used}\t\n{self.patch_port}\t\n{self.comment}"
+	#TODO: figure out split efficiently
+	def __eq__(self, oterminal: object) -> bool:
+		print(self.__dict__)
+		
 	def get_parent_room(self) -> str:
 		return self.parent_room
+
 def create_list(filename:str) -> list:
 	# DO NOT REMOVE THIS UTF ENCODING
 	with open(f"./{filename}", encoding="utf-8-sig") as f:
@@ -78,7 +94,11 @@ def create_list(filename:str) -> list:
 			terminal_list.append(Terminal(row))
 		return terminal_list
 
-		
+def parent_room_list(terminal_list: list) -> ParentRooms:
+	parent_rooms: ParentRooms = ParentRooms()
+	for terminal in terminal_list:
+		if parent_rooms.contains_terminal(terminal): continue
+		else: parent_rooms.add_terminal(terminal) 
 
 
 def string_terminal_list(terminal_list: list) -> str:
@@ -96,8 +116,5 @@ def string_terminal_list(terminal_list: list) -> str:
 
 
 
-
-temp: list = create_list(sys.argv[1])
-
-string_terminal_list(temp)
+Terminal(["150h", "150G-1", "2", "/ X", 10, "44.45", 150, ""]).__eq__(Terminal(["150G", "150F-1", "2", "/ X", 10, "42.43", 150, ""]))
 # string_terminal_list(temp)
