@@ -31,11 +31,12 @@ class ParentRoom:
 		for terminal in self.terminals:
 			output = f"{output}{terminal}\n"
 		return output + "\n"
-def is_header(csv_line: list) -> bool:
-	for index in csv_line:
-		if index == "Room Number": return True
-		else: return False
 
+def is_header(line: list) -> bool:
+	for item in line:
+		if item == "Room Number": return True
+	return False
+	
 # ParentRooms data information:
 # supposed to store a list of all the parent rooms.
 # I think I can refactor this into a couple of functions instead of a whole class.
@@ -66,31 +67,40 @@ class ParentRooms:
 def translate_used_symbols(symbol: str) -> int:
 	return 1 if symbol == 'X' else 0
 
-# function for converting from my markings into a designation
-# FIXME: This ain't working right now for some reason.
-def translate_symbols_to_bin(port_usage: str) -> Union[int, bool]:
-	if port_usage == "undefined": return False
-	temp: list[str] = port_usage.split(' ')
-	temp.reverse()
-	total: int = 0;
-	for x in range(len(temp)):
-		total = total + (2**x)*(translate_used_symbols(temp[x]))
-	return total
 
 	##This should return the sequence
 
 
 
-# TODO: Refactor constructor to be more efficient
 # TODO: Move structs into seperate file
 class Terminal:
 	def __init__(self, info) -> None:
-		self.room, self.box_label, self.port_count, self.port_count, self.used, self.patch_port, self.parent_room, self.comment = info
 
-		# TODO reimplement when done
-		# self.used = translate_symbols_to_bin(self.used)
+		#Takes a list of attribute names defined previously
+		#Slams it into python's dictionary and pares it with an item in info_item
+		# Reverse is critical here.
+		attr_names = self.__get_header_info()
+		attr_names.reverse()
+		for info_item in info:
+			self.__setattr__(attr_names.pop(), info_item)
 
-		self.used = translate_symbols_to_bin(self.used)
+		print(self.__dict__)
+		self.used = self.__translate_symbols_to_bin()
+		print(self.__dict__)
+	
+	# Returns header information for setting attributes
+	def __get_header_info(self) -> list:
+		return ["room", "box_label", "port_count", "used", "patch_panel", "patch_port", "parent_room", "comment"]
+	# function for converting from my markings into a designation
+	def __translate_symbols_to_bin(self) -> Union[int, bool]:
+		port_usage = self.used
+		if port_usage == "undefined": return False
+		temp: list[str] = port_usage.split(' ')
+		temp.reverse()
+		total: int = 0;
+		for x in range(len(temp)):
+			total = total + (2**x)*(translate_used_symbols(temp[x]))
+		return total
 
 	def __str__(self) -> str:
 		output = ""
@@ -104,12 +114,6 @@ class Terminal:
 			# print("---dict shit--")
 			# print(self.__getattribute__(item))
 		# return f"\t\n{self.room}\t\n{self.box_label}\t\n{self.port_count}\t\n{self.used}\t\n{self.patch_port}{self.comment}"
-	#TODO: figure out __dict__ efficiently
-	def __eq__(self, oterminal: object) -> bool:
-		print(self.__dict__)
-		
-	def get_parent_room(self) -> str:
-		return self.parent_room
 	def __eq__(self, oterminal: object) -> bool:
 		return self.room == oterminal.room and self.box_label == oterminal.box_label
 
@@ -119,7 +123,7 @@ def create_list(filename:str) -> list:
 		reader = csv.reader(f)
 		terminal_list: list = []
 		for row in reader:
-			if is_header(row): continue
+			print(row)
 			terminal_list.append(Terminal(row))
 		return terminal_list
 
