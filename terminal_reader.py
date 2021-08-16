@@ -1,4 +1,5 @@
 # Meant to process the CSV file information.
+# TODO: Make terminal_reader the command handler, and allow for structs and other things to do the work.
 import sys, argparse, csv
 from typing import Union
 
@@ -26,10 +27,10 @@ class ParentRoom:
 			if oterminal == terminal: return True
 		return False
 	def __str__(self)-> str:
-		output = f"{self.number}\n"
+		output = f"--{self.number}--"
 		for terminal in self.terminals:
-			output = f"{output}\t{terminal}"
-		return output
+			output = f"{output}{terminal}\n"
+		return output + "\n"
 def is_header(csv_line: list) -> bool:
 	for index in csv_line:
 		if index == "Room Number": return True
@@ -66,6 +67,7 @@ def translate_used_symbols(symbol: str) -> int:
 	return 1 if symbol == 'X' else 0
 
 # function for converting from my markings into a designation
+# FIXME: This ain't working right now for some reason.
 def translate_symbols_to_bin(port_usage: str) -> Union[int, bool]:
 	if port_usage == "undefined": return False
 	temp: list[str] = port_usage.split(' ')
@@ -78,15 +80,31 @@ def translate_symbols_to_bin(port_usage: str) -> Union[int, bool]:
 	##This should return the sequence
 
 
+
+# TODO: Refactor constructor to be more efficient
+# TODO: Move structs into seperate file
 class Terminal:
 	def __init__(self, info) -> None:
 		self.room, self.box_label, self.port_count, self.port_count, self.used, self.patch_port, self.parent_room, self.comment = info
 
+		# TODO reimplement when done
+		# self.used = translate_symbols_to_bin(self.used)
+
 		self.used = translate_symbols_to_bin(self.used)
 
 	def __str__(self) -> str:
-		return f"\t\n{self.room}\t\n{self.box_label}\t\n{self.port_count}\t\n{self.used}\t\n{self.patch_port}\t\n{self.comment}"
-	#TODO: figure out split efficiently
+		output = ""
+		for item in self.__dict__:
+			if item == "parent_room": continue
+			if item == "room":
+				output = f"{output}\n{item.capitalize()}:{self.__getattribute__(item)}"
+			else:
+				output = f"{output}\n-{item}:{self.__getattribute__(item)}"
+		return output
+			# print("---dict shit--")
+			# print(self.__getattribute__(item))
+		# return f"\t\n{self.room}\t\n{self.box_label}\t\n{self.port_count}\t\n{self.used}\t\n{self.patch_port}{self.comment}"
+	#TODO: figure out __dict__ efficiently
 	def __eq__(self, oterminal: object) -> bool:
 		print(self.__dict__)
 		
@@ -96,7 +114,7 @@ class Terminal:
 		return self.room == oterminal.room and self.box_label == oterminal.box_label
 
 def create_list(filename:str) -> list:
-	# DO NOT REMOVE THIS UTF ENCODING
+	# REQ utf-8-sig
 	with open(f"./{filename}", encoding="utf-8-sig") as f:
 		reader = csv.reader(f)
 		terminal_list: list = []
@@ -112,6 +130,8 @@ def parent_room_list(terminal_list: list) -> ParentRooms:
 	print(parent_rooms)
 
 
+
+# TODO make this somehow different
 def string_terminal_list(terminal_list: list) -> str:
 	def myFunc(term: Terminal) -> int:
 		return term.parent_room
