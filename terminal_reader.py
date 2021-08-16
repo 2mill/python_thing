@@ -16,14 +16,20 @@ class ParentRoom:
 		self.number:str = number
 	def __eq__(self, oparent_room:object) -> bool:
 		return self.number == oparent_room.number
-	def add_terminal(self, terminal: object) -> bool:
-		if self.terminals.__contains__(terminal):
-			return False
-		self.terminals.append(terminal)
+	def add(self, terminal: object) -> bool:
+		for term in self.terminals:
+			if term == terminal: return False
+		self.terminals.append(terminal)	
+		return True
 	def contains(self, oterminal: object) -> bool:
 		for terminal in self.terminals:
 			if oterminal == terminal: return True
 		return False
+	def __str__(self)-> str:
+		output = f"{self.number}\n"
+		for terminal in self.terminals:
+			output = f"{output}\t{terminal}"
+		return output
 def is_header(csv_line: list) -> bool:
 	for index in csv_line:
 		if index == "Room Number": return True
@@ -38,18 +44,21 @@ class ParentRooms:
 	# This function should if not present make a new parent room if one does not exist
 	# Add a terminal to a parent room 
 	# If the room exists, add the terminal to the room.
-	def add_parent_room(self, parent_room:ParentRoom)->bool:
-		if self.contains(parent_room): return False
-		self.parent_rooms.append(parent_room)
-		return True
-	def contains_terminal(self, terminal: object) -> bool:
-		for parent_room in self.parent_rooms:
-			if parent_room.contains(terminal): return True
-		return False
-	def contains(self, parent_room:ParentRoom)-> bool:
+	def add(self, terminal: object) -> bool:
+		parent_room: str = terminal.parent_room
 		for room in self.parent_rooms:
-			if parent_room.__eq__(room): return True
-		return False
+			if room.number == parent_room:
+				return room.add(terminal)
+		new_parent_room = ParentRoom(parent_room)
+		new_parent_room.add(terminal)
+		self.parent_rooms.append(new_parent_room)
+		return True
+	# TODO: check and verify formatting
+	def __str__(self) -> str:
+		output = ""
+		for room in self.parent_rooms:
+			output = f"{output}{room}"
+		return output
 
 
 
@@ -83,6 +92,8 @@ class Terminal:
 		
 	def get_parent_room(self) -> str:
 		return self.parent_room
+	def __eq__(self, oterminal: object) -> bool:
+		return self.room == oterminal.room and self.box_label == oterminal.box_label
 
 def create_list(filename:str) -> list:
 	# DO NOT REMOVE THIS UTF ENCODING
@@ -97,8 +108,8 @@ def create_list(filename:str) -> list:
 def parent_room_list(terminal_list: list) -> ParentRooms:
 	parent_rooms: ParentRooms = ParentRooms()
 	for terminal in terminal_list:
-		if parent_rooms.contains_terminal(terminal): continue
-		else: parent_rooms.add_terminal(terminal) 
+		parent_rooms.add(terminal)
+	print(parent_rooms)
 
 
 def string_terminal_list(terminal_list: list) -> str:
@@ -116,5 +127,4 @@ def string_terminal_list(terminal_list: list) -> str:
 
 
 
-Terminal(["150h", "150G-1", "2", "/ X", 10, "44.45", 150, ""]).__eq__(Terminal(["150G", "150F-1", "2", "/ X", 10, "42.43", 150, ""]))
-# string_terminal_list(temp)
+parent_room_list(create_list(sys.argv[1]))
