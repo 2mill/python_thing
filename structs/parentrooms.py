@@ -48,7 +48,7 @@ class ParentRooms:
 		for room in self.parent_rooms:
 			output = f"{output}{room}"
 		return output
-def parent_room_list(terminal_list: list) -> ParentRooms:
+def generate_parent_room_list(terminal_list: list) -> ParentRooms:
 	parent_rooms: ParentRooms = ParentRooms()
 	for terminal in terminal_list:
 		parent_rooms.add(terminal)

@@ -4,6 +4,10 @@ import sys, argparse, csv
 from typing import Union
 from structs import terminal, parentrooms
 
+def generate_parent_room_list(terminal_list: list) -> object:
+	return parentrooms.generate_parent_room_list(terminal_list)
+
+
 parser = argparse.ArgumentParser(description="A data processor for a Terminal list")
 
 
@@ -56,4 +60,3 @@ def string_terminal_list(terminal_list: list) -> str:
 
 
 
-parentrooms.parent_room_list(create_list(sys.argv[1]))
