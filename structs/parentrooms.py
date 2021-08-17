@@ -43,7 +43,6 @@ class ParentRooms:
 		new_parent_room.add(terminal)
 		self.parent_rooms.append(new_parent_room)
 		return True
-	# TODO: check and verify formatting
 	def __str__(self) -> str:
 		output = ""
 		for room in self.parent_rooms:

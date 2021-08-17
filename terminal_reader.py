@@ -9,7 +9,6 @@ parser = argparse.ArgumentParser(description="A data processor for a Terminal li
 
 # Supposed to store the parentroom number
 # And an actual reference to the Terminal object
-# TODO: ~~Make a function for adding new terminal~~: Complete
 # I don;t think I need to add a compare for terminals, because
 # The CSV files should not have any more information
 def is_header(line: list) -> bool:
@@ -42,7 +41,6 @@ def create_list(filename:str) -> list:
 
 
 
-# TODO make this somehow different
 def string_terminal_list(terminal_list: list) -> str:
 	def myFunc(term: object) -> int:
 		return term.parent_room

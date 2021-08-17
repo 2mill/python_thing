@@ -1,11 +1,13 @@
 from typing import Union
+def get_header_info() -> list:
+	return ["room", "box_label", "port_count", "used", "patch_panel", "patch_port", "parent_room", "comment"]
 class Terminal:
 	def __init__(self, info) -> None:
 
 		#Takes a list of attribute names defined previously
 		#Slams it into python's dictionary and pares it with an item in info_item
 		# Reverse is critical here.
-		attr_names = self.__get_header_info()
+		attr_names = get_header_info()
 		attr_names.reverse()
 		for info_item in info:
 			self.__setattr__(attr_names.pop(), info_item)
@@ -13,8 +15,6 @@ class Terminal:
 		self.used = self.__translate_symbols_to_bin()
 	
 	# Returns header information for setting attributes
-	def __get_header_info(self) -> list:
-		return ["room", "box_label", "port_count", "used", "patch_panel", "patch_port", "parent_room", "comment"]
 	# function for converting from my markings into a designation
 	def __translate_symbols_to_bin(self) -> Union[int, bool]:
 		port_usage = self.used
