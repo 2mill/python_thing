@@ -1,4 +1,9 @@
 from typing import Union
+import patch_panel
+
+class Port:
+	def __init__():
+		pass
 def get_header_info() -> list:
 	return ["room", "box_label", "port_count", "used", "patch_panel", "patch_port", "parent_room", "comment"]
 class Terminal:
