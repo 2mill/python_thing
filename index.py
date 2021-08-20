@@ -1,4 +1,4 @@
-import sys, argparse
+import sys, argparse, csv
 import csv_processor
 
 parser = argparse.ArgumentParser(prog="patchmap",
@@ -12,4 +12,8 @@ args = parser.parse_args()
 # temp_list = processor.create_list(args.csv)
 # processor.generate_parent_room_list(temp_list)
 
-print(csv_processor.process(args.csv))
+def create_list(filename:str) -> list:
+	# REQ utf-8-sig
+	with open(f"./{filename}", encoding="utf-8-sig") as f:
+		reader: list = csv.reader(f)
+		csv_processor.process(reader)

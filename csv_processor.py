@@ -9,6 +9,8 @@ def is_header(line: list) -> bool:
 
 def get_header_info() -> list:
 	return ["room", "box_label", "port_count", "used", "patch_panel", "patch_port", "parent_room", "comment"]
+def convert_row(row: list) -> list:
+	pass
 def process(loaded_csv: list):
 	processes_list: list = []
 	for item in loaded_csv:
@@ -16,7 +18,7 @@ def process(loaded_csv: list):
 		header_info.reverse()
 		new_line: list = []
 		for el in item:
-			el_info = header_info().pop()
+			el_info = header_info.pop()
 			if el_info == "used":
 				new_line.append(translate_symbols_to_bin(el))
 			elif el_info == "patch_port":
@@ -24,12 +26,12 @@ def process(loaded_csv: list):
 			else:
 				new_line.append(el)
 		processes_list.append(new_line)
+	return processes_list
 def translate_used_symbols(symbol: str) -> int:
 	return 1 if symbol == 'X' else 0
 # Returns header information for setting attributes
 # function for converting from my markings into a designation
-def translate_symbols_to_bin(self) -> Union[int, bool]:
-	port_usage = self.used
+def translate_symbols_to_bin(port_usage) -> Union[int, bool]:
 	if port_usage == "undefined": return False
 	temp: list[str] = port_usage.split(' ')
 	temp.reverse()

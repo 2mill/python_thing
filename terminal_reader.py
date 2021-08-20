@@ -30,16 +30,6 @@ parser = argparse.ArgumentParser(description="A data processor for a Terminal li
 
 
 
-def create_list(filename:str) -> list:
-	# REQ utf-8-sig
-	with open(f"./{filename}", encoding="utf-8-sig") as f:
-		reader = csv.reader(f)
-		csv_processor.process(reader)
-		# terminal_list: list = []
-		# for row in reader:
-		# 	terminal_list.append(terminal.get_terminal(row))
-		# return terminal_list
-
 
 
 
@@ -58,3 +48,5 @@ def string_terminal_list(terminal_list: list) -> str:
 
 
 
+
+create_list(sys.argv[1])
