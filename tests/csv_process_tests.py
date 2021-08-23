@@ -1,18 +1,17 @@
 import csv_processor
 import random
+from .test_utils import get_stacked_set
 
 
 passed = lambda x: "FAIL" if x else "PASS"
-check_str = lambda load, result, target: f"{load} -> {result} == {target} ? {passed(result==target)}"
+check_str = lambda load, func, target: f"{load} -> {func(load)} == {target} ? {passed(func(load)==target)}"
 
 def test_conversions() -> bool :
-	result_bool = False
-	test_csv_file: list = [['169G', '169G-1', '2', '/ /', '12', '47.48', '169', '',],]
-	result = csv_processor.process(test_csv_file)
-	result_bool = result == [['169G', '169G-1', '2', 0, '12', ['47', '48'], '169', '']] 
-	test_csv_file: list = [['169G', '169G-1', '2', '/ /', '12', '8.9 - 17.18', '148', '']]
-	result_bool = csv_processor.process(test_csv_file) == [['169G', '169G-1', '2', 0, '12', [['8', '9'], ['17', '18']], '148', '']]
-	return result_bool
+	return check_str(
+		load = [['169G', '169G-1', '2', '/ /', '12', '47.48', '169', '',]],
+		func = csv_processor.process,
+		target = [['169G', '169G-1', '2', 0, '12', [47, 48], '169', '']] 
+	)
 
 
 	
@@ -28,17 +27,15 @@ def get_stacked_set(count=1) -> str:
 
 
 def test_patchinfo_translation_single() -> str:
-	load = get_stacked_set()
 	return check_str(
-		load,
-		csv_processor.translate_patch_ports(load),
+		load = get_stacked_set(),
+		func = csv_processor.translate_patch_ports,
 		target = [23,22]
 	)
 def test_patchinfo_translation_double() -> str:
-	load = get_stacked_set(count=2)
 	return check_str(
-		load,
-		csv_processor.translate_patch_ports(load),
+		load = get_stacked_set(count=2),
+		func = csv_processor.translate_patch_ports,
 		target = [[23, 22], [23,22]]
 	)
 
