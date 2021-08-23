@@ -3,6 +3,7 @@ import random
 
 
 passed = lambda x: "FAIL" if x else "PASS"
+check_str = lambda load, result, target: f"{load} -> {result} == {target} ? {passed(result==target)}"
 
 def test_conversions() -> bool :
 	result_bool = False
@@ -14,26 +15,34 @@ def test_conversions() -> bool :
 	return result_bool
 
 
-def get_random_set() -> str:
-	return f"{random.randrange(1,48)}.{random.randrange(1,48)}"
-
-# Returns the string attempt
-def random_list_and_formatted(size: int) -> str:
-	other_temp: str = ""
-	for i in range(size):
-		number = random.randrange(1,49)
-		# BAD CODE GOES BRRT
-		other_temp = f"{number}" if len(other_temp) == 0 else f"{other_temp}.{number}"
-
-	return other_temp
 	
 
-def test_patchinfo_translation_single(size) -> None:
-	tester: str = random_list_and_formatted(4) 
+def get_stacked_set(count=1) -> str:
+	def get_set() -> str:
+		return "23.22"
+	if count < 1: return ""
+	ret: str = ""
+	for i in range(count):
+		ret = f"{ret}{get_set()}" if i == count - 1 else f"{ret}{get_set()}-"
+	return ret
 
-	# TODO: REBUILD THIS PART TO TAKE THE OUTPUT
-	# FROM THE PREVIOUS FUNCTION AND FORMAT IT SO THAT TRIES TO MATCH	
-	pass
+
+def test_patchinfo_translation_single() -> str:
+	load = get_stacked_set()
+	return check_str(
+		load,
+		csv_processor.translate_patch_ports(load),
+		target = [23,22]
+	)
+def test_patchinfo_translation_double() -> str:
+	load = get_stacked_set(count=2)
+	return check_str(
+		load,
+		csv_processor.translate_patch_ports(load),
+		target = [[23, 22], [23,22]]
+	)
+
+
 
 
 	# Model
@@ -41,5 +50,3 @@ def test_patchinfo_translation_single(size) -> None:
 	# "12.13 - 12.13" -> [["12", "13"], ["12, 13"]]
 
 
-def test_patchinfo_translation_double() -> bool:
-	pass
