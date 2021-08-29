@@ -15,7 +15,7 @@ class PatchPanel:
 		else:
 			self.ports[real_pos] = port
 			return True
-	def get_port_from_patch(self, position):
+	def get_port_from_patch_position(self, position):
 		real_postion: int = true_position(position)
 		return self.ports[true_position]
 

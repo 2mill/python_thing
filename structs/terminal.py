@@ -1,9 +1,17 @@
 from typing import Union
-import patch_panel
 
+#Port should be carrying the following informatio
+#  link to terminal, port number, link to patch panel cell, usage.
+translate_used_symbols = lambda symbol: 1 if symbol == 'X' else 0
+get_terminal = lambda info: Terminal(info)
 class Port:
-	def __init__():
-		pass
+	def __init__(self, terminal: object, patch_panel_link, usage: bool) -> None:
+		self.terminal = terminal
+		self.patch_panel_destionation = patch_panel_link,
+		self.usage = usage
+
+	
+
 def get_header_info() -> list:
 	return ["room", "box_label", "port_count", "used", "patch_panel", "patch_port", "parent_room", "comment"]
 class Terminal:
@@ -42,7 +50,5 @@ class Terminal:
 		return output
 	def __eq__(self, oterminal: object) -> bool:
 		return self.room == oterminal.room and self.box_label == oterminal.box_label
-def translate_used_symbols(symbol: str) -> int:
-	return 1 if symbol == 'X' else 0
 def get_terminal(info) -> Terminal:
 	return Terminal(info)
