@@ -9,7 +9,7 @@ check_str = lambda load, func, target: f"{load} -> {func(load)} == {target} ? {p
 def test_conversions() -> bool :
 	return check_str(
 		load = [['169G', '169G-1', '2', '/ /', '12', '47.48', '169', '',]],
-		func = csv_processor.process,
+		func = csv_processor.generate_patch_panel,
 		target = [['169G', '169G-1', '2', 0, '12', [47, 48], '169', '']] 
 	)
 

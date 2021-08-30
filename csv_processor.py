@@ -1,32 +1,27 @@
 import csv
 from typing import Union
 
-def is_header(line: list) -> bool:
-	for item in line:
-		if item == "Room Number": return True
-	return False
+# Checks if the header matches or not,
+# Planning on making this more dynamic w/ a CSV file.
+matches_header = lambda source: source== [
+	"room",
+	"box_label",
+	"port_count",
+	"used",
+	"patch_panel",
+	"patch_port",
+	"parent_room",
+	"comment"
+]
 
 
-def get_header_info() -> list:
-	return ["room", "box_label", "port_count", "used", "patch_panel", "patch_port", "parent_room", "comment"]
-def convert_row(row: list) -> list:
-	pass
-def process(loaded_csv: list):
+
+def generate_patch_panel(loaded_csv: list):
+	# Remove the header information.
+	# Parse for patch panel information.
+	# Generate new patch panels as needed. Requires Patchpanel list
 	processes_list: list = []
 	for item in loaded_csv:
-		header_info: list = get_header_info()
-		header_info.reverse()
-		new_line: list = []
-		for el in item:
-			el_info = header_info.pop()
-			if el_info == "used":
-				new_line.append(translate_symbols_to_bin(el))
-			elif el_info == "patch_port":
-				new_line.append(el.split('.'))
-			else:
-				new_line.append(el)
-		processes_list.append(new_line)
-	return processes_list
 def translate_used_symbols(symbol: str) -> int:
 	return 1 if symbol == 'X' else 0
 # Returns header information for setting attributes
