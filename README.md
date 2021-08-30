@@ -30,9 +30,13 @@ Therefore, the program should be going through the files, and placing ports into
 
 The following tasks need to be completed in order to meet these goals:
 
-- [ ]  CSV processing
-    - [ ]  Gather CSV file data from CLI commands.
+- [x]  CSV processing
+    - [x]  Gather CSV file data from CLI commands.
     - [ ]  Processes USED information into something more understandable for the computer(this should already be relatively finished.
     - [ ]  Split Patch Panel information into its own data sheet.
-    - [ ]  Split Port information properly.
+    - [x]  Split Port information properly.
 - [ ]  Continue with writing tasks for Ports and Terminals after CSV processor is completed.
+
+## NEW BRANCH
+What needs to be done at this point is focusing on the patch panel side of things. The reason for this change is because it makes more sense on a user interface level.
+Therefore, for a comm closet room there should be a list of enumerated patch panels for the room which will lead into a further list that contains all of the ports and their assignments. Ports will only point to the terminal and nothing else, because the tech would only need to know location information and that's it.
